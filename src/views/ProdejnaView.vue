@@ -3,7 +3,7 @@
     <!-- Hero Banner Section -->
     <v-sheet
       color="grey-darken-4"
-      height="300"
+      height="500"
       class="mb-8 position-relative"
     >
       <div class="d-flex flex-column fill-height justify-center align-center text-white">
