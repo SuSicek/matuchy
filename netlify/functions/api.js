@@ -20,7 +20,8 @@ export const handler = async (event) => {
       body: JSON.stringify(data),
     };
   } catch (error) {
-    return { statusCode: 500, body: error.toString() };
+    console.error("Database Error:", error);
+    return { statusCode: 500, body: JSON.stringify({ error: error.toString() }) };
   }
 };
 
