@@ -98,17 +98,30 @@
 
 <script>
 import { divisions, normalizeDivisionSlug, iconToMdi } from '../data/divisions'
-import { useReferences, divisionKeyToName } from '../composables/useReferences'
+// import { useReferences, divisionKeyToName } from '../composables/useReferences'
 
 export default {
   name: 'DivisionView',
   props: {
-    division: { type: String, required: true }
+    id: { type: String, required: true }
   },
   data() {
-    const normalized = normalizeDivisionSlug(this.division)
     return {
-      currentKey: normalized
+      currentKey: 'energetika'
+    }
+  },
+  watch: {
+    id: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          const normalized = normalizeDivisionSlug(newVal)
+          // If normalization fails, retain previous or default
+          if (divisions[normalized]) {
+            this.currentKey = normalized
+          }
+        }
+      }
     }
   },
   computed: {

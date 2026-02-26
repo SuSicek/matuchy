@@ -52,16 +52,23 @@
 
           <!-- Tabs/nav row -->
           <div class="d-flex align-center" style="gap:8px;">
-            <v-menu open-on-hover>
+            <v-menu open-on-hover :close-on-content-click="true">
               <template #activator="{ props }">
-                <v-btn v-bind="props" variant="text" style="color: white !important" append-icon="mdi-chevron-down">Naše služby</v-btn>
+                <v-btn
+                  v-bind="props" 
+                  variant="text" 
+                  :color="isAtTop ? 'white' : 'primary'"
+                  append-icon="mdi-chevron-down"
+                >
+                  Naše služby
+                </v-btn>
               </template>
               <v-list>
                 <v-list-item
                   v-for="divKey in divisionOrder"
                   :key="divKey"
                   :title="divisions[divKey].title"
-                  :to="{ name: 'Division', params: { division: divKey } }"
+                  :to="{ name: 'Division', params: { id: divKey } }"
                 />
                 <v-divider class="my-1" />
                 <v-list-item :to="{ name: 'Prodejna' }" title="Prodejna" />
@@ -98,7 +105,7 @@
           v-for="divKey in divisionOrder"
           :key="divKey"
           :title="divisions[divKey].title"
-          :to="{ name: 'Division', params: { division: divKey } }"
+          :to="{ name: 'Division', params: { id: divKey } }"
         />
         <v-list-item :to="{ name: 'Prodejna' }" title="Prodejna" />
       </v-list-group>

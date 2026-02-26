@@ -21,9 +21,9 @@
         <v-col cols="6" md="4">
           <h6 class="footer-heading">Naše služby</h6>
           <ul class="footer-links">
-            <li><RouterLink :to="{ name: 'Division', params: { division: 'energetika' } }">Energetika</RouterLink></li>
-            <li><RouterLink :to="{ name: 'Division', params: { division: 'prumysl' } }">TZB</RouterLink></li>
-            <li><RouterLink :to="{ name: 'Division', params: { division: 'stavebnictvi' } }">Stavba</RouterLink></li>
+            <li><RouterLink :to="{ name: 'Division', params: { id: 'energetika' } }">Energetika</RouterLink></li>
+            <li><RouterLink :to="{ name: 'Division', params: { id: 'tzb' } }">TZB</RouterLink></li>
+            <li><RouterLink :to="{ name: 'Division', params: { id: 'stavba' } }">Stavba</RouterLink></li>
             <li><RouterLink :to="{ name: 'Prodejna' }">Prodejna</RouterLink></li>
           </ul>
         </v-col>

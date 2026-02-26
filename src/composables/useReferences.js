@@ -238,16 +238,27 @@ const references = ref([
 ])
 
 // Mapping helpers for division slugs <-> display names
-export const divisionKeyToName = (key) => ({ energetika: 'Energetika', stavba: 'Stavba', tzb: 'TZB' }[key] || null)
-export const divisionNameToKey = (name) => ({ Energetika: 'energetika', Stavba: 'stavba', TZB: 'tzb' }[name] || null)
+const divisionKeyToNameMap = { energetika: 'Energetika', stavba: 'Stavba', tzb: 'TZB' }
+const divisionNameToKeyMap = { Energetika: 'energetika', Stavba: 'stavba', TZB: 'tzb' }
+
+export const divisionKeyToName = (key) => divisionKeyToNameMap[key] || null
+export const divisionNameToKey = (name) => divisionNameToKeyMap[name] || null
 
 export function useReferences() {
-  const years = computed(() => Array.from(new Set(references.value.map(r => r.year))).sort((a, b) => b - a))
-  const divisions = computed(() => Array.from(new Set(references.value.map(r => r.division))))
+  const years = computed(() => {
+    if (!references.value) return []
+    return Array.from(new Set(references.value.map(r => r.year))).sort((a, b) => b - a)
+  })
+  
+  const divisions = computed(() => {
+    if (!references.value) return []
+    return Array.from(new Set(references.value.map(r => r.division)))
+  })
 
-  const filterByDivisionKey = (divisionKey) => {
+  // Helper to filter by division key (slug)
+  const filterSummaryByDivision = (divisionKey) => {
     const name = divisionKeyToName(divisionKey)
-    if (!name) return []
+    if (!name || !references.value) return []
     return references.value.filter(r => r.division === name)
   }
 
@@ -255,6 +266,6 @@ export function useReferences() {
     references,
     years,
     divisions,
-    filterByDivisionKey
+    filterSummaryByDivision // clearer name to avoid conflict with imported function if any
   }
 }

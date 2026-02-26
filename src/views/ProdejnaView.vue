@@ -1,12 +1,12 @@
 <template>
   <div class="eshop-page">
     <!-- Hero Banner Section -->
-    <v-parallax
-      src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=2532&auto=format&fit=crop"
+    <v-sheet
+      color="grey-darken-4"
       height="300"
-      class="mb-8"
+      class="mb-8 position-relative"
     >
-      <div class="d-flex flex-column fill-height justify-center align-center text-white bg-black-overlay">
+      <div class="d-flex flex-column fill-height justify-center align-center text-white">
         <h1 class="text-h2 font-weight-bold mb-4 text-center">Profesionální E-shop</h1>
         <p class="text-h5 text-center mb-6" style="max-width: 700px;">
           Špičkové nářadí, instalační materiál a ochranné pomůcky pro vaše projekty.
@@ -15,7 +15,7 @@
           Prohlédnout nabídku
         </v-btn>
       </div>
-    </v-parallax>
+    </v-sheet>
 
     <v-container class="py-8" id="products-section">
       <v-row>
@@ -366,7 +366,7 @@
 
 <script>
 // Logic
-import { supabase } from '../supabase'
+// import { supabase } from '../supabase'
 
 export default {
   name: 'ProdejnaView',
@@ -463,23 +463,46 @@ export default {
     async fetchData() {
       this.loading = true;
       try {
-        // Fetch categories
-        const { data: categoriesData, error: catError } = await supabase.from('categories').select('*');
-        if (catError) console.error("Error fetching categories:", catError);
-        else this.categories = categoriesData;
+        // 1. Fetch products from MongoDB via Netlify Function
+        const prodResponse = await fetch('/.netlify/functions/api?collection=products');
+        const rawProducts = await prodResponse.json();
+        
+        if (rawProducts && Array.isArray(rawProducts)) {
+          // Normalize Mongo data to match our view
+          this.products = rawProducts.map(p => {
+             // Fix for deprecated source.unsplash.com
+             let startImage = p.image || 'https://images.unsplash.com/photo-1581235720704-06d3acfcb36f?q=80&w=600&auto=format&fit=crop';
+             if (startImage.includes('source.unsplash.com')) {
+                // value after ? is the keyword
+                const keyword = startImage.split('?')[1] || 'tools';
+                // LoremFlickr is more reliable for keyword based placeholders currently
+                startImage = `https://loremflickr.com/600/600/${keyword.replace(',', '/')}/all`;
+             }
 
-        // Fetch brands
-        const { data: brandsData, error: brandError } = await supabase.from('brands').select('*');
-        if (brandError) console.error("Error fetching brands:", brandError);
-        else this.brands = brandsData;
+             return {
+              id: p._id, // Mongo ID
+              name: p.name,
+              description: p.description,
+              price: p.price,
+              category_id: p.category, // Use string category as ID
+              brand_id: p.brand || 'unknown',
+              stock: p.stock !== undefined ? p.stock : 50, // Default stock if missing
+              image: startImage,
+              rating: 4.5
+            };
+          });
 
-        // Fetch products
-        const { data: productsData, error: prodError } = await supabase.from('products').select('*');
-        if (prodError) console.error("Error fetching products:", prodError);
-        else this.products = productsData;
+          // 2. Extract Categories dynamically if not fetched
+          const uniqueCats = [...new Set(this.products.map(p => p.category_id))].filter(Boolean);
+          this.categories = uniqueCats.map(c => ({ id: c, name: c }));
+
+          // 3. Extract Brands (if available) or generic
+          const uniqueBrands = [...new Set(this.products.map(p => p.brand_id))].filter(Boolean);
+          this.brands = uniqueBrands.map(b => ({ id: b, name: b === 'unknown' ? 'Obecná značka' : b }));
+        }
         
       } catch (err) {
-        console.error("Unexpected error:", err);
+        console.error("Unexpected error fetching from MongoDB:", err);
       } finally {
         this.loading = false;
       }

@@ -173,10 +173,10 @@ export default {
     return {
       currentSlide: 0,
       slides: [
-        { src: '/fotky/trubkyvykop.png', alt: 'Trubky výkop' },
+        { src: '/fotky/dronBrno.png', alt: 'Dron Brno' },
         { src: '/fotky/modrozlutakotelna.png', alt: 'Modrožlutá kotelna' },
         { src: '/fotky/sedetrubky.png', alt: 'Sedé trubky' },
-        { src: '/fotky/energetika.png', alt: 'Energetika' }
+        { src: '/fotky/references/vsetin/Vsetín 2.jpg', alt: 'Vsetín' }
       ],
       stats: [
         { number: 32, label: 'Let na trhu' },
@@ -196,21 +196,21 @@ export default {
           title: 'Energetika',
           subtitle: 'Výroba a úspory energií',
           description: 'Zajišťuje komplexní služby v oblasti výroby, distribuce a úspor energií.',
-          image: '/fotky/prodejna.png',
+          image: '/fotky/modrozlutakotelna.png',
           link: '/division/energetika'
         },
         {
           title: 'Stavba',
           subtitle: 'Kompletní stavební projekty',
           description: 'Realizuje stavební projekty od návrhu po dokončení s důrazem na kvalitu a termíny.',
-          image: '/fotky/stavba.png',
+          image: '/fotky/references/vsetin/Vsetín 2.jpg',
           link: '/division/stavba'
         },
         {
           title: 'TZB',
           subtitle: 'Technická zařízení budov',
           description: 'Poskytuje odborné řešení technických zařízení budov pro komfort, efektivitu a bezpečnost.',
-          image: '/fotky/energetika.png',
+          image: '/fotky/sedetrubky.png',
           link: '/division/tzb'
         },
         {
